@@ -7,10 +7,13 @@ fi
 
 rm -f *.o *.out
 
+AS_FLAGS="-g -32"
+LD_FLAGS="-m elf_i386"
+
 for file in $1/*.s; do
   base=`basename -s .s $file`
-  as $file -o $base.o
+  as $AS_FLAGS $file -o $base.o
 done
 
-ld *.o -o $1.out
+ld $LD_FLAGS *.o -o $1.out
 ./$1.out
