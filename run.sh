@@ -1,8 +1,18 @@
 #!/bin/sh
 
+if [ "$#" -ne 1 ]; then
+  echo -e "Usage: ./run.sh <folder_name|\"clean\">"
+  exit 1
+fi
+
 if [[ "$1" == "clean" ]] ; then
   rm -f *.o *.out
-  exit
+  exit 1
+fi
+
+if [[ ! -d "$1" ]]; then
+  echo -e "Error: Could not find $1 folder"
+  exit 1
 fi
 
 rm -f *.o *.out
