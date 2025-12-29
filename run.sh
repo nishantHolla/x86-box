@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -lt 1 ]; then
   echo -e "Usage: ./run.sh <folder_name|\"clean\">"
   exit 1
 fi
@@ -17,13 +17,15 @@ fi
 
 rm -f *.o *.out
 
-AS_FLAGS="-g -32"
-LD_FLAGS="-m elf_i386"
+CC="as"
+LD="ld"
+COMPILE_FLAGS="-g -32"
+LINK_FLAGS="-m elf_i386"
 
 for file in $1/*.s; do
   base=`basename -s .s $file`
-  as $AS_FLAGS $file -o $base.o
+  $CC $COMPILE_FLAGS $file -o $base.o
 done
 
-ld $LD_FLAGS *.o -o $1.out
-./$1.out
+$LD $LINK_FLAGS *.o -o $1.out
+./$1.out "${@:2}"
