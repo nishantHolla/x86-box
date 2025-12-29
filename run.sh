@@ -17,15 +17,19 @@ fi
 
 rm -f *.o *.out
 
-CC="as"
-LD="ld"
-COMPILE_FLAGS="-g -32"
-LINK_FLAGS="-m elf_i386"
+CC="gcc"
+CFLAGS="-m32 -g -c -fno-pie"
+LDFLAGS="-m32 -nostartfiles -no-pie"
 
-for file in $1/*.s; do
-  base=`basename -s .s $file`
-  $CC $COMPILE_FLAGS $file -o $base.o
+# Assemble all .s files
+for file in "$1"/*.s; do
+  base=$(basename "$file" .s)
+  $CC $CFLAGS "$file" -o "$base.o"
 done
 
-$LD $LINK_FLAGS *.o -o $1.out
-./$1.out "${@:2}"
+# Link
+$CC $LDFLAGS *.o -o "$1.out"
+
+# Run
+./"$1.out" "${@:2}"
+
