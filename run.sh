@@ -1,5 +1,11 @@
 #!/bin/sh
 
+CC="as"
+LD="ld"
+COMPILE_FLAGS="-g -32"
+LINK_FLAGS="-m elf_i386"
+BUILD_DIR="./build"
+
 if [ "$#" -lt 1 ]; then
   echo -e "Usage: ./run.sh <folder_name|\"clean\">"
   exit 1
@@ -15,21 +21,14 @@ if [[ ! -d "$1" ]]; then
   exit 1
 fi
 
-rm -f *.o *.out
+rm -f $BUILD_DIR/*.o *.out
 
-CC="gcc"
-CFLAGS="-m32 -g -c -fno-pie"
-LDFLAGS="-m32 -nostartfiles -no-pie"
+mkdir -p $BUILD_DIR
 
-# Assemble all .s files
-for file in "$1"/*.s; do
-  base=$(basename "$file" .s)
-  $CC $CFLAGS "$file" -o "$base.o"
+for file in $1/*.s; do
+  base=`basename -s .s $file`
+  $CC $COMPILE_FLAGS $file -o $BUILD_DIR/$base.o
 done
 
-# Link
-$CC $LDFLAGS *.o -o "$1.out"
-
-# Run
-./"$1.out" "${@:2}"
-
+$LD $LINK_FLAGS $BUILD_DIR/*.o -o $1.out
+./$1.out "${@:2}"
