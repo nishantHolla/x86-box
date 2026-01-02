@@ -1,9 +1,9 @@
 #!/bin/sh
 
-CC="as"
-LD="ld"
-COMPILE_FLAGS="-g -32"
-LINK_FLAGS="-m elf_i386"
+CC="gcc"
+LD="gcc"
+CFLAGS="-c -g -m32"
+LDFLAGS="-m32 -no-pie"
 BUILD_DIR="./build"
 
 if [ "$#" -lt 1 ]; then
@@ -27,8 +27,8 @@ mkdir -p $BUILD_DIR
 
 for file in $1/*.s; do
   base=`basename -s .s $file`
-  $CC $COMPILE_FLAGS $file -o $BUILD_DIR/$base.o
+  $CC $CFLAGS $file -o $BUILD_DIR/$base.o
 done
 
-$LD $LINK_FLAGS $BUILD_DIR/*.o -o $1.out
+$LD $LDFLAGS $BUILD_DIR/*.o -o $1.out
 ./$1.out "${@:2}"
