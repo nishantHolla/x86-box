@@ -30,8 +30,8 @@ rm -f $BUILD_DIR/*.o *.out
 
 mkdir -p $BUILD_DIR
 
-for file in $1/*.s; do
-  base=`basename -s .s $file`
+for file in $1/*.[sc]; do
+  base=`basename "$file" | sed 's/\.\(c\|s\)$//'`
   $CC $CFLAGS $file -o $BUILD_DIR/$base.o
 done
 
