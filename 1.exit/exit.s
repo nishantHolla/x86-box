@@ -12,9 +12,12 @@
 .section .data
 
 .section .text
-.global _start
+.global main
 
-_start:
-  movl $1, %eax # this is the linux kernel system call for exiting a program
-  movl $1, %ebx # this is the status number that will be returned to the OS
-  int $0x80     # this wakes up the kernel to run the exit command
+main:
+  pushl %ebp             # save the old base pointer
+  movl %esp, %ebp        # start a new stack frame
+
+  movl $1, %eax          # this is the linux kernel system call for exiting a program
+  movl $1, %ebx          # this is the status number that will be returned to the OS
+  int $0x80              # this wakes up the kernel to run the exit command

@@ -37,27 +37,36 @@
 .lcomm BUFFER_DATA, BUFFER_SIZE
 
 .section .text
-.global _start
+.global main
 
-_start:
-  movl %esp, %ebp               # save the stack pointer
+main:
+  pushl %ebp                            # save the old base pointer
+  movl %esp, %ebp                       # start a new stack frame
 
-  movl $SYS_READ, %eax          # prepare eax for read syscall
-  movl $STDIN, %ebx             # prepare ebx with stdin fd
-  movl $BUFFER_DATA, %ecx       # prepare ecx with buffer location
-  movl $BUFFER_SIZE, %edx       # prepare edx with buffer size
-  int $LINUX_SYSCALL            # execute the syscall
+  movl %esp, %ebp                       # save the stack pointer
 
-  pushl $BUFFER_DATA            # push 2nd argument to stack
-  pushl %eax                    # push 1st argument to stack
-  call convert_to_upper         # call the function
-  popl %eax                     # get the size of the valid buffer
-  addl $4, %esp                 # reset stack
+  movl $SYS_READ, %eax                  # prepare eax for read syscall
+  movl $STDIN, %ebx                     # prepare ebx with stdin fd
+  movl $BUFFER_DATA, %ecx               # prepare ecx with buffer location
+  movl $BUFFER_SIZE, %edx               # prepare edx with buffer size
+  int $LINUX_SYSCALL                    # execute the syscall
 
-  movl %eax, %edx               # prepare edx with buffer size
-  movl $SYS_WRITE, %eax         # prepare eax for write syscall
-  movl $STDOUT, %ebx            # prepare ebx with stdout fd
-  movl $BUFFER_DATA, %ecx       # prepare ecx with buffer location
-  int $LINUX_SYSCALL            # execute the syscall
+  pushl $BUFFER_DATA                    # push 2nd argument to stack
+  pushl %eax                            # push 1st argument to stack
+  call convert_to_upper                 # call the function
+  popl %eax                             # get the size of the valid buffer
+  addl $4, %esp                         # reset stack
 
-  jmp _start                    # repeat
+  movl %eax, %edx                       # prepare edx with buffer size
+  movl $SYS_WRITE, %eax                 # prepare eax for write syscall
+  movl $STDOUT, %ebx                    # prepare ebx with stdout fd
+  movl $BUFFER_DATA, %ecx               # prepare ecx with buffer location
+  int $LINUX_SYSCALL                    # execute the syscall
+
+  jmp _start                            # repeat
+
+  movl $0, %eax                         # set the return value
+
+  movl %ebp, %esp                       # restore stack pointer
+  popl %ebp                             # restore bsae pointer
+  ret                                   # return

@@ -10,9 +10,15 @@
 # VARIABLES: The registers have the following uses:
 #          - %eax: Holds the age of the current record
 #          - %ebx: Holds the maximum age seen so far
+
+.extern printf
+
 .section .data
 input_file_name:
   .ascii "record.data\0"
+
+print_fmt:
+  .ascii "largest age is %d\n\0"
 
 .section .bss
   .lcomm record_buffer, RECORD_SIZE
@@ -58,6 +64,13 @@ largest_age_loop_foot:
   jmp largest_age_loop_head                   # repeat
 
 largest_age_end:
-  movl $SYS_EXIT, %eax                        # prepare eax with exit syscall
-  # ebx already has the exit code
-  int $LINUX_SYSCALL                          # call the interrupt
+  pushl %ebx                                  # push the 2nd argument to stack
+  pushl $print_fmt                            # push the 1st argument to stack
+  call printf                                 # call the printf function
+  addl $8, %esp                               # remove arguments from the stack
+
+  movl $0, %eax                               # set the return value
+
+  movl %ebp, %esp                             # restore stack pointer
+  popl %ebp                                   # restore bsae pointer
+  ret                                         # return

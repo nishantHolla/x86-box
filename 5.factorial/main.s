@@ -2,21 +2,37 @@
 #
 # INPUT: None
 #
-# OUTPUT: The returned status code contains the result of the expression
+# OUTPUT: The result is printed to stdout
 #
 # VARIABLES: None
 #
 # MEMORY: None
+
+.extern printf
+
 .section .data
 
+print_fmt:
+  .ascii "5! = %d\n\0"
+
 .section .text
-.global _start
+.global main
 
-_start:
-  pushl $5             # push the 1st argument to stack
-  call factorial2      # call the function
-  addl $4, %esp        # reset the stack pointer to remove arguments from the stack
+main:
+  pushl %ebp                            # save the old base pointer
+  movl %esp, %ebp                       # start a new stack frame
 
-  movl %eax, %ebx      # move the result of the function to ebx
-  movl $1, %eax        # prepare eax for exit call
-  int $0x80            # call the interrupt
+  pushl $5                              # push the 1st argument to stack
+  call factorial2                       # call the function
+  addl $4, %esp                         # reset the stack pointer to remove arguments from the stack
+
+  pushl %eax                            # push the 2nd argument to stack
+  pushl $print_fmt                      # push the 1st argument to stack
+  call printf                           # call the printf function
+  addl $8, %esp                         # remove arguments from the stack
+
+  movl $0, %eax                         # set the return value
+
+  movl %ebp, %esp                       # restore stack pointer
+  popl %ebp                             # restore bsae pointer
+  ret                                   # return
