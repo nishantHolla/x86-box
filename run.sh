@@ -21,6 +21,11 @@ if [[ ! -d "$1" ]]; then
   exit 1
 fi
 
+if [[ "$(realpath "$1")" == "$(realpath "./10.dynamic_libraries/")" ]]; then
+  # LDFLAGS+=" -Llib -lfactorial -Wl,-rpath,./lib"
+  LDFLAGS+=" -Llib -lfactorial"
+fi
+
 rm -f $BUILD_DIR/*.o *.out
 
 mkdir -p $BUILD_DIR
@@ -31,4 +36,4 @@ for file in $1/*.s; do
 done
 
 $LD $LDFLAGS $BUILD_DIR/*.o -o $1.out
-./$1.out "${@:2}"
+LD_LIBRARY_PATH="./lib" ./$1.out "${@:2}"
