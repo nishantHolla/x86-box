@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 CC="gcc"
 LD="gcc"
 CFLAGS="-c -g -m32"
-LDFLAGS="-m32 -no-pie"
+LDFLAGS="-m32 -no-pie -z noexecstack"
 LIBS=""
 BUILD_DIR="./build"
 
