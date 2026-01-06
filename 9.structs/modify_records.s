@@ -1,5 +1,5 @@
-.include "9.structs/linux.s"
-.include "9.structs/record.s"
+.include "linux.s"
+.include "record.s"
 
 # PURPOSE: Modify records by incrementing the age field of all the strcuts in the file
 #

@@ -1,5 +1,5 @@
-.include "9.structs/record.s"
-.include "9.structs/linux.s"
+.include "record.s"
+.include "linux.s"
 
 # PURPOSE: This function reads a record from the file descriptor
 #

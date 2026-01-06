@@ -1,4 +1,4 @@
-.include "9.structs/linux.s"
+.include "linux.s"
 
 # PURPOSE: Entry point of the program
 #

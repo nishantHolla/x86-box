@@ -1,5 +1,5 @@
-.include "9.structs/linux.s"
-.include "9.structs/record.s"
+.include "linux.s"
+.include "record.s"
 
 # PURPOSE: The function writes a record to the given file descriptor
 #

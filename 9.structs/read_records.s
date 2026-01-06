@@ -1,5 +1,5 @@
-.include "9.structs/linux.s"
-.include "9.structs/record.s"
+.include "linux.s"
+.include "record.s"
 
 # PURPOSE: Read 3 records from a file and print the name field to stdout
 #
