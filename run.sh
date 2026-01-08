@@ -13,7 +13,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 if [[ "$1" == "clean" ]] ; then
-  rm -f *.o *.out
+  rm -f ./$BUILD_DIR/*.o *.out
   exit 1
 fi
 
